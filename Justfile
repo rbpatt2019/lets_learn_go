@@ -2,6 +2,7 @@ set dotenv-load
 
 # aliases
 alias dev := develop
+alias fmt := fumpt
 
 # List all available actions
 default:
@@ -15,3 +16,11 @@ git_init:
 
 # Prepare development environment
 develop: git_init
+
+# Run gofumpt
+fumpt:
+  gofumpt -w -l -extra .
+
+# Run golangci-lint
+lint:
+  golangci-lint run
