@@ -1,0 +1,39 @@
+output:
+  sort-results: true
+
+linters:
+  enable:
+    - godot
+    - gosec
+    - gocritic
+    - gofumpt
+    - misspell
+    - cyclop
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  gocritic:
+    enabled-tags:
+      - performance
+      - diagnostic
+      - opinionated
+      - style
+  godot:
+    scope: all
+    capital: true
+  gofumpt:
+    extra-rules: true
+    lang-version: "1.17"
+  gosimple:
+    go: "1.17"
+  govet:
+    check-shadowing: true
+    enable-all: true
+  misspell:
+    locale: UK
+  staticcheck:
+    go: "1.17"
+  unused:
+    go: "1.17"
