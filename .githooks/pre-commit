@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+
 STAGED_GO_FILES=$(git diff --cached --name-only -- '*.go')
 
 if [[ $STAGED_GO_FILES == "" ]]; then
