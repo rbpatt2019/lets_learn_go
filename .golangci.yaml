@@ -1,6 +1,9 @@
 output:
   sort-results: true
 
+issues:
+  max-same-issues: 0
+
 linters:
   enable:
     - godot
