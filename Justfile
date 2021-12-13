@@ -1,8 +1,8 @@
 set dotenv-load
 
 # aliases
-alias dev := develop
 alias fmt := fumpt
+alias c := check
 
 # List all available actions
 default:
@@ -14,13 +14,13 @@ git_init:
   chmod +x .githooks/pre-commit
   git config core.hooksPath .githooks
 
-# Prepare development environment
-develop: git_init
+# Run linters and formatters
+check +FILES=".": (fumpt FILES) (lint FILES)
 
 # Run gofumpt
-fumpt:
-  gofumpt -w -l -extra .
+fumpt +FILES=".":
+  gofumpt -w -l -extra {{FILES}}
 
 # Run golangci-lint
-lint:
-  golangci-lint run
+lint *FILES:
+  golangci-lint run {{FILES}}
