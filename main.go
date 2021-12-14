@@ -1,21 +1,13 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// Go requires explicit type conversion
-// So ints can't be compared to floats, etc.
-// This is strict enough to prevent `int` from comparing
-// with say `int32`.
+// Const declares things immutable
+// However, they only give names to literals
+// This means they can only hold values known at COMPILE time
+// A variable calculated at runtime cannot be declared immutable.
+const x int64 = 10
+
 func main() {
-	var x int = 10
-	var y float64 = 30.2
-	fmt.Printf("x: %T, %d\n", x, x)
-	fmt.Printf("y: %T, %f\n", y, y)
-
-	var z float64 = y + float64(x)
-	var a int = x + int(y)
-	fmt.Printf("z: %T, %f\n", z, z)
-	fmt.Printf("a: %T, %d\n", a, a)
+	fmt.Printf("%T, %d", x, x)
 }
