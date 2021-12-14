@@ -2,35 +2,35 @@ package main
 
 import "fmt"
 
+// Capacity vs length.
 func main() {
-	// Arrays can be declared by:
-	// 1) using zero values of the specified type.
-	var x [3]int
-	fmt.Printf("%T, %v\n", x, x)
-	// 2) specifying the values for an array literal.
-	y := [3]int{1, 2, 3}
-	fmt.Printf("%T, %v\n", y, y)
-	// 3) defining a sparse array.
-	z := [10]int{1, 5: 2, 9: 3}
-	fmt.Printf("%T, %v\n", z, z)
-
-	// However, arrays are very rare for direct usage in Go
-	// As the length is part of the type, there are some odd limitations
-	// the size cannot be defined with a variable (types must be known at runtime)
-	// arrays of different size cannot be converted to identical types
-	// They exist mostly to allow slices.
-
-	// Slices
-	// These are specified the same, but with without size
-	// Their 0 value is `nil`.
+	// First note:
+	// Empty slices from var are declared but not assigned. Hence, nil.
+	// Empty slices from make are declared and assigned.
+	// They are initialised with the zero value of their type.
 	var a []int
-	fmt.Printf("%T, %v\n", a, a)
-	// The only allowed comparisons for slices is to check for nil.
-	fmt.Println(a == nil)
-	// Slices can be grown
-	// To append a slice, we use the variadic operator.
-	a = append(a, 50)
-	b := []int{1, 2, 3}
-	a = append(a, b...)
-	fmt.Printf("%T, %v\n", a, a)
+	b := make([]int, 5, 10)
+	fmt.Println("a ", a, len(a), cap(a))
+	fmt.Println("b ", b, len(b), cap(b))
+	// Length is the nuber of elements in the array.
+	// Capacity is the number of elemets that could be in the array.
+	// If an append would make len > cap,
+	// a new slice is created with 2x cap (if cap < 1_024)
+	// or 1.25*cap (if cap > 1024).
+	c := []int{1, 2, 3, 4, 5}
+	b = append(b, c...)
+	fmt.Println("b ", b, len(b), cap(b))
+	b = append(b, 10)
+	fmt.Println("b ", b, len(b), cap(b))
+
+	// Given all this, what's the best way to declare a slice?
+	// 1) If it might stay nil (ie possibly no return value in a function), use:
+	// var x []int
+	// 2) If there are starting values, or the values won't change, use:
+	//  y := []int{1, 2, 3}
+	// 3) If you know the size, but not the values, use:
+	//  z := make([]int, 1, 5)
+	// Use a nonzero length when using a slice as a buffer
+	// If you 100% know the length, then use a non-zero length
+	// Oterwise, use a zero length and a non-zero capacity.
 }
