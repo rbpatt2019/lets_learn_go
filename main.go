@@ -29,5 +29,21 @@ func main() {
 	// Ints support the usual ops.
 	x = 20
 	x *= 4
-	fmt.Printf("%d", x)
+	fmt.Printf("%d\n", x)
+
+	// Strings/Runes
+	// Runes represent literal single characters and are marked with single quotes
+	// Under the hood, these are int32's.
+	z := 'a'
+	fmt.Printf("%T, %c\n", z, z)
+	// Strings are represented with double quotes
+	// and contain 0 or more runes.
+	a := "Hello world"
+	fmt.Printf("%T, %s\n", a, a)
+
+	// Booleans
+	// Have a zero value of False
+	// "Truthiness/Falsiness" is not allowed.
+	var b bool
+	fmt.Printf("%T, %t", b, b)
 }
