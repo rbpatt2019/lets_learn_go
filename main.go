@@ -2,35 +2,40 @@ package main
 
 import "fmt"
 
-// Slice expressions.
+// Maps.
 func main() {
-	// Slicing is 0-indexed, open-ended.
-	x := []int{1, 2, 3, 4, 5}
-	fmt.Println(x[:2], x[2:])
-	// Assigning a slice expression to a var means the memory is shared.
-	y := x[:2]
-	y[0] = 100
-	fmt.Println(x, y)
-	// And things get really wonky with append,
-	// Because capacity is shared!
-	// Y has capacity 4, and shares memory with x.
-	// So when y is appended to, its third element goes into the same memory as the third element of x!
-	y = append(y, 200)
-	fmt.Println(x, y)
-	// To avoid, either never append to a substring,
-	// or use full slice expression notations.
-	// This contains a third position to indicate how much capacity is available to rhe sub-slice.
-	z := x[:2:2]
+	// 0 value is nil.
+	// A nil map can be read, but not written.
+	var x map[string]int
+	fmt.Printf("%T, %v\n", x, x)
+	// To create a map literal,
+	// which has length 0 but can be read and wirtten...
+	y := map[string]int{}
+	fmt.Printf("%T, %v\n", y, y)
+	// As with slices, if the size is known, but not the values, use make...
+	z := make(map[string]int, 3)
+	fmt.Printf("%T, %v\n", z, z)
+	// Reading and writing will fell familiar.
+	z["cats"] = 1
+	z["dogs"] = 2
+	z["people"] = 3
 	fmt.Println(z)
-	z = append(z, 500)
-	fmt.Println(x, z)
-	// And arrays can be converted to slices,
-	// but run ito the same memory sharing issues...
-	a := [4]int{1, 2, 3, 4}
-	b := a[:]
-	fmt.Printf("a: %T, %v\nb: %T, %v\n", a, a, b, b)
-	// For memory independence, use copy which, well copies the slice.
-	c := make([]int, 2)
-	copy(c, b)
-	fmt.Println(c)
+	// But accessing a map key will always return.
+	// If the key does not exist, then the 0 value of the value type is returned.
+	// Use the comma-ok idiom if you need to know if the key exists.
+	v, ok := z["birds"]
+	if ok {
+		fmt.Println(v)
+		return
+	}
+	fmt.Println("V does not exist")
+	// Deleting requires delete...
+	delete(z, "people")
+	fmt.Printf("%T, %v\n", z, z)
+	// As go lacks sets, a map can be used instead...
+	set := map[int]bool{}
+	vals := []int{5, 10, 2, 5, 8, 7, 3, 9, 1, 2, 10}
+	for _, v := range vals {
+		set[v] = true
+	}
 }
