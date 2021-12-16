@@ -2,40 +2,38 @@ package main
 
 import "fmt"
 
-// Maps.
+// When you have related data that you want to group together,
+// Use a struct!
+// These are NOT objects/classes as they lack inheritance.
+type person struct {
+	name string
+	age  int
+}
+
+// Structs.
 func main() {
-	// 0 value is nil.
-	// A nil map can be read, but not written.
-	var x map[string]int
-	fmt.Printf("%T, %v\n", x, x)
-	// To create a map literal,
-	// which has length 0 but can be read and wirtten...
-	y := map[string]int{}
-	fmt.Printf("%T, %v\n", y, y)
-	// As with slices, if the size is known, but not the values, use make...
-	z := make(map[string]int, 3)
-	fmt.Printf("%T, %v\n", z, z)
-	// Reading and writing will fell familiar.
-	z["cats"] = 1
-	z["dogs"] = 2
-	z["people"] = 3
-	fmt.Println(z)
-	// But accessing a map key will always return.
-	// If the key does not exist, then the 0 value of the value type is returned.
-	// Use the comma-ok idiom if you need to know if the key exists.
-	v, ok := z["birds"]
-	if ok {
-		fmt.Println(v)
-		return
+	// The zero value of a struct has all fields set to that field's 0-value.
+	var fred person
+	fmt.Println(fred)
+	// Structs can be created as literals.
+	// Fields not specified get their 0 value.
+	beth := person{
+		age:  30,
+		name: "Beth",
 	}
-	fmt.Println("V does not exist")
-	// Deleting requires delete...
-	delete(z, "people")
-	fmt.Printf("%T, %v\n", z, z)
-	// As go lacks sets, a map can be used instead...
-	set := map[int]bool{}
-	vals := []int{5, 10, 2, 5, 8, 7, 3, 9, 1, 2, 10}
-	for _, v := range vals {
-		set[v] = true
+	fmt.Println(beth)
+	// Anonymous structs - creating a struct type without a name -
+	// are a thing, but they are mostly used for data marshalling
+	// and testing.
+	pet := struct {
+		name string
+		kind string
+	}{
+		name: "fido",
+		kind: "cat",
 	}
+	fmt.Printf("pet: %T, %v\n", pet, pet)
+	// Structs are ony comparable if al their fields are comparable
+	// And type conversions are only possible if all fields are in the same order, name, and type.
+	fmt.Println(beth == fred)
 }
