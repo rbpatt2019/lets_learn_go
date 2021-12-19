@@ -1,22 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
-// Shadowing.
-// A shadowing variable has the same name as a variable in a containing block.
+// Blocks.
+// Variables are scoped to the blocks they are defined in.
 func main() {
-	x := 10
-	if x > 5 {
-		// Uses x from the main block.
-		// As x has not been declared in this block.
-		// Prints 10.
-		fmt.Println(x)
-		// Creates a new variable constrained to the `if` block.
-		x := 5
-		// Prints 5.
-		fmt.Println(x)
+	// So n is only accessible in this if block!
+	if n := rand.Intn(10); n == 0 {
+		fmt.Println("Low")
+	} else if n > 5 {
+		fmt.Println("High")
+	} else {
+		fmt.Println("Good")
 	}
-	// Uses x from the main block.
-	// Prints 10.
-	fmt.Println(x)
+	// Also, idiomatic go prefers short if statements that return early.
+	// You'd normally write this as a switch.
+	// In fact, I'm going to have to commit with no-verify to show this :P.
 }
