@@ -2,77 +2,31 @@ package main
 
 import (
 	"fmt"
-	"strconv"
+	"sort"
 )
 
-// Functions can also be defined as types...
-type opFuncType func(int, int) int
+type Person struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
 
-// Functions are values.
+// Closures - functions as parameters
 //
-// This means they can be passed around,
-// allowing for some fun behaviour.
-func add(i, j int) int {
-	return i + j
-}
-
-func sub(i, j int) int {
-	return i - j
-}
-
-func mul(i, j int) int {
-	return i * j
-}
-
-func div(i, j int) int {
-	return i / j
-}
-
-var opMap = map[string]opFuncType{
-	"+": add,
-	"-": sub,
-	"*": mul,
-	"/": div,
-}
-
-// Always check your errors!
+// These can reference local variables and then be passed elsewhere.
 func main() {
-	expressions := [][]string{
-		{"2", "+", "3"},
-		{"2", "-", "3"},
-		{"2", "*", "3"},
-		{"2", "/", "3"},
-		{"2", "%", "3"},
-		{"two", "+", "3"},
-		{"5"},
+	people := []Person{
+		{"Pat", "Patterson", 25},
+		{"Tracy", "Bobbert", 23},
+		{"Fred", "Fredson", 18},
 	}
-	for _, exp := range expressions {
-		if len(exp) != 3 {
-			fmt.Println("Invalid expression:", exp)
-			continue
-		}
+	fmt.Println("Before sorting", people)
 
-		// Use strconv.Atoi to convert to an integer.
-		p1, err := strconv.Atoi(exp[0])
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
-		op := exp[1]
-		opFunc, ok := opMap[op]
-		if !ok {
-			fmt.Println("Unsupported operator:", op)
-			continue
-		}
-
-		p2, err := strconv.Atoi(exp[2])
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
-		result := opFunc(p1, p2)
-		fmt.Println(result)
-	}
+	// Can sort any slice by the passed functions
+	// Which can be anonymous (think lambdas)
+	// Note how `people` is captured by the closure.
+	sort.Slice(people, func(i, j int) bool {
+		return people[i].LastName < people[j].LastName
+	})
+	fmt.Println("After sorting", people)
 }
