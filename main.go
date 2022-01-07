@@ -1,32 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"sort"
-)
+import "fmt"
 
-type Person struct {
-	FirstName string
-	LastName  string
-	Age       int
+func makeMult(base int) func(int) int {
+	return func(i int) int {
+		return base * i
+	}
 }
 
-// Closures - functions as parameters
+// Closures - functions as return values
 //
 // These can reference local variables and then be passed elsewhere.
 func main() {
-	people := []Person{
-		{"Pat", "Patterson", 25},
-		{"Tracy", "Bobbert", 23},
-		{"Fred", "Fredson", 18},
+	twoBase := makeMult(2)
+	threeBase := makeMult(3)
+	for i := 0; i < 3; i++ {
+		fmt.Println(twoBase(i), threeBase(i))
 	}
-	fmt.Println("Before sorting", people)
-
-	// Can sort any slice by the passed functions
-	// Which can be anonymous (think lambdas)
-	// Note how `people` is captured by the closure.
-	sort.Slice(people, func(i, j int) bool {
-		return people[i].LastName < people[j].LastName
-	})
-	fmt.Println("After sorting", people)
 }
