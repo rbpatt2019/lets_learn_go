@@ -2,50 +2,37 @@ package main
 
 import "fmt"
 
-type person struct {
-	name string
+type Person struct {
+	FirstName string
+	LastName  string
 }
 
-func modifyNot(i int, s string, p person) {
-	i *= 2
-	s = "Nope"
-	p.name = "Bob"
-}
-
-func modifyMostly(m map[int]string, l []int) {
-	m[2] = "yes"
-	m[3] = "totally"
-	delete(m, 1)
-
-	for k, v := range l {
-		l[k] = v * 2
-	}
-	l = append(l, 10)
-}
-
-// Go is call by value
+// Pointers
 //
-// When you supply a variable for a parameter,
-// Go always makes a copy.
-// This effectively makes variables immutable,
-// unless pointers are used (more on that later).
+// A pointer is simply a variable whose contents are the address
+// where another variable is stored.
 //
-// This also means that maps and slices behave slightly differently,
-// as they are implemented with pointers.
+// Its zero value is nil.
 func main() {
-	p := person{}
-	i := 2
-	s := "Yes"
-	modifyNot(i, s, p)
-	fmt.Println(i, s, p) // None will change.
-
-	m := map[int]string{
-		1: "a",
-		2: "b",
-	}
-	l := []int{1, 2, 3}
-	modifyMostly(m, l)
-	fmt.Println(m, l)
-	// Maps are fully mutable (pointer)
-	// Slices cannot be lengthened.
+	x := "Hello"
+	// & os the address operator.
+	// It returns a pointer to the variable.
+	pointerToX := &x
+	// * is the indirection operator.
+	// It returns the value a pointer points to.
+	// This is called dereferencing.
+	// Dereferencing a nil pointer panics.
+	fmt.Println(pointerToX)
+	fmt.Println(*pointerToX)
+	// New returns a pointer to the zero value of the indicated type.
+	y := new(int)
+	fmt.Println(y, *y)
+	// Thought that's not particularly idiomatic.
+	// For primitive types, declare a variable then point to it.
+	var z string
+	a := &z
+	fmt.Println(a)
+	// For structs, derefence a struct literal to create a pointer.
+	b := &Person{}
+	fmt.Println(b)
 }
