@@ -1,33 +1,35 @@
 package main
 
-import "fmt"
-
-// Since the copy of a pointer still points to the same memory,
-// this updates the contents.
-func update(px *int) {
-	*px = 20
-}
-
-// Call by value - so this changes the copy, not the original.
-// This actually fails lints!
-func failUpdate(px *int) {
-	x := 20
-	px = &x
-}
+import (
+	"fmt"
+	"log"
+)
 
 // Pointers
 //
-// Since go is call by value,
-// a passed pointer is copied.
-// However, this means that nil pointers cannot be updated by functions.
-//
-// Additionally,
-// if you want the assigned value of a pointer to be there after exiting a function,
-// then you must dereference the pointer on assignment.
+// Pointers increase the workload of the GC,
+// and make data flow harder to understand,
+// so don't use unless necessary.
+// E.g.
+// Create a struct by having a function instantiate one
+// rather than passing a pointer.
+type Foo struct {
+	Field1 string
+	Field2 int
+}
+
+func MakeFoo(field1 string, field2 int) (Foo, error) {
+	f := Foo{
+		Field1: field1,
+		Field2: field2,
+	}
+	return f, nil
+}
+
 func main() {
-	x := 10
-	failUpdate(&x)
-	fmt.Println(x)
-	update(&x)
-	fmt.Println(x)
+	f, err := MakeFoo("Hello", 10)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(f)
 }
