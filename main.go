@@ -2,41 +2,38 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"log"
-	"os"
 )
 
-// Using slices as buffers
-//
-// Just because Go has a garbage collector doesn't mean we shouldn't
-// try to reduce it's workload!
-// Here, we create a single buffer slice of bytes
-// and repeatedly read to that!
-func readFile(name string) error {
-	file, err := os.Open(name)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+type Person struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
 
-	buf := make([]byte, 100)
-	for {
-		count, err := file.Read(buf)
-		if err == io.EOF {
-			break
-		}
-		if count == 0 {
-			return nil
-		}
-		fmt.Println(buf[:count])
-	}
-	return nil
+// User-defined types can have methods.
+//
+// These are declared very much like functions,
+// with the addition of a receiver specification.
+// Idiomatically, this is a one-ish letter abbreviation of the type.
+//
+// The receiver should be a pointer if:
+// 1) The method modifies the receiver.
+// 2) The method must handle nil instances.
+// If either of the above are true, then normal practice is to have all methods
+// for that type be pointer receivers.
+//
+// Also, avoid getter and setter methods.
+//
+// And methods should follow their type.
+func (p Person) String() string {
+	return fmt.Sprintf("%s %s, age %d", p.FirstName, p.LastName, p.Age)
 }
 
 func main() {
-	err := readFile("lorem.txt")
-	if err != nil {
-		log.Fatal(err)
+	p := Person{
+		FirstName: "Ryan",
+		LastName:  "Patterson-Cross",
+		Age:       101,
 	}
+	fmt.Println(p.String())
 }
