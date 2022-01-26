@@ -2,34 +2,41 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"os"
 )
 
-// Pointers
+// Using slices as buffers
 //
-// Pointers increase the workload of the GC,
-// and make data flow harder to understand,
-// so don't use unless necessary.
-// E.g.
-// Create a struct by having a function instantiate one
-// rather than passing a pointer.
-type Foo struct {
-	Field1 string
-	Field2 int
-}
-
-func MakeFoo(field1 string, field2 int) (Foo, error) {
-	f := Foo{
-		Field1: field1,
-		Field2: field2,
+// Just because Go has a garbage collector doesn't mean we shouldn't
+// try to reduce it's workload!
+// Here, we create a single buffer slice of bytes
+// and repeatedly read to that!
+func readFile(name string) error {
+	file, err := os.Open(name)
+	if err != nil {
+		return err
 	}
-	return f, nil
+	defer file.Close()
+
+	buf := make([]byte, 100)
+	for {
+		count, err := file.Read(buf)
+		if err == io.EOF {
+			break
+		}
+		if count == 0 {
+			return nil
+		}
+		fmt.Println(buf[:count])
+	}
+	return nil
 }
 
 func main() {
-	f, err := MakeFoo("Hello", 10)
+	err := readFile("lorem.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(f)
 }
