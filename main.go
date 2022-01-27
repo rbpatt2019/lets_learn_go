@@ -4,36 +4,26 @@ import (
 	"fmt"
 )
 
-type Person struct {
-	FirstName string
-	LastName  string
-	Age       int
+type Adder struct {
+	start int
 }
 
-// User-defined types can have methods.
-//
-// These are declared very much like functions,
-// with the addition of a receiver specification.
-// Idiomatically, this is a one-ish letter abbreviation of the type.
-//
-// The receiver should be a pointer if:
-// 1) The method modifies the receiver.
-// 2) The method must handle nil instances.
-// If either of the above are true, then normal practice is to have all methods
-// for that type be pointer receivers.
-//
-// Also, avoid getter and setter methods.
-//
-// And methods should follow their type.
-func (p Person) String() string {
-	return fmt.Sprintf("%s %s, age %d", p.FirstName, p.LastName, p.Age)
+func (a Adder) AddTo(val int) int {
+	return a.start + val
 }
 
 func main() {
-	p := Person{
-		FirstName: "Ryan",
-		LastName:  "Patterson-Cross",
-		Age:       101,
-	}
-	fmt.Println(p.String())
+	// Method value
+	// Assigning a method to a variable
+	// In this case, the method is bound to a specific object.
+	myAdder := Adder{start: 10}
+	f1 := myAdder.AddTo
+	fmt.Println(f1(10))
+
+	// Method Expression
+	// Assigning a method from a literal to a variable
+	// In this case, it is not bound to an instance,
+	// and must be passed an instance of the appropriate type as the first parameter.
+	f2 := Adder.AddTo
+	fmt.Println(f2(myAdder, 10))
 }
