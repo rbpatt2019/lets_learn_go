@@ -1,27 +1,36 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-type MailCategory int
+type Employee struct {
+	Name string
+	ID   string
+}
 
-// Generally, use iota for interaml purposes only,
-// where constants are referred to by name rather than value.
+func (e Employee) Description() string {
+	return fmt.Sprintf("%s (%s)", e.Name, e.ID)
+}
+
+// Embedding
 //
-// Or put another way:
-// only use iota when you want to differentiate between values,
-// but don't care what those values are.
-// If the actual value matters,
-// specify it.
-const (
-	Uncategorised MailCategory = iota
-	Personal
-	Spam
-	Social
-	Advertisements
-)
+// Is not inheritance!
+// Employee has no name assigned to it,
+// Making it an embedded field.
+// Any method declared on an embedded field
+// is promoted to the containing struct.
+type Manager struct {
+	Employee
+	Reports []Employee
+}
 
+// Which makes the following valid!
 func main() {
-	fmt.Println(Uncategorised)
+	m := Manager{
+		Employee: Employee{
+			Name: "Bob",
+			ID:   "123",
+		},
+		Reports: []Employee{},
+	}
+	fmt.Println(m.ID)
 }
