@@ -23,6 +23,8 @@ linters-settings:
       - diagnostic
       - opinionated
       - style
+    disabled-checks:
+      - unnamedResult 
   godot:
     scope: all
     capital: true
