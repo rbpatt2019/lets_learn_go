@@ -2,25 +2,15 @@ package main
 
 import (
 	"errors"
-	"fmt"
-	"os"
 )
 
-func fileChecker(name string) error {
-	f, err := os.Open(name)
-	if err != nil {
-		return fmt.Errorf("in fileChecker: %w", err)
-	}
-	defer f.Close()
-	return nil
-}
-
-// Use `errors.Is` to check if any error in the error chain matches a sentinel error.
+// Use `errors.As` to check if any error in the error chain matches a specific type.
+// It takes the error and a pointer to a variable of the desired error type.
+// Then, if the error is present, it is assigned to the pointer.
 func main() {
-	err := fileChecker("whoops")
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			fmt.Println("File does not exist")
-		}
-	}
+	err := SomethingThatErrors()
+    var myErr MyErr
+    if errors.As(err, &myErr) {
+        // Do things with myErr
+    }
 }
