@@ -1,24 +1,31 @@
 package main
 
-type Status int
-
-// Define an enumeration to hold the status codes.
-const (
-	InvalidLogin Status = iota + 1
-	NotFound
+import (
+	"errors"
+	"fmt"
+	"os"
 )
 
-// Define a struct to hold the error information.
-type StatusErr struct {
-	Status  Status
-	Message string
+// Error wrapping passes the error back to your code
+// with additional context about where/what went wrong.
+// This is achieved with the %w verb in Errorf.
+func fileChecker(name string) error {
+	f, err := os.Open(name)
+	if err != nil {
+		return fmt.Errorf("in fileChecker: %w", err)
+	}
+	defer f.Close()
+	return nil
 }
 
-// And a method to guarantee we neet the interface.
-func (se StatusErr) Error() string {
-	return se.Message
+// Example with unwrap.
+// If you wanted custom, implement an unwrap method.
+func main() {
+	err := fileChecker("whoops")
+	if err != nil {
+		fmt.Println(err)
+		if wrappedErr := errors.Unwrap(err); wrappedErr != nil {
+			fmt.Println(wrappedErr)
+		}
+	}
 }
-
-// Now, you can return errors with more information about the failure.
-// Even when implementing a custom error type,
-// always return the standard error.
