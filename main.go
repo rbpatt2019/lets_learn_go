@@ -6,9 +6,6 @@ import (
 	"os"
 )
 
-// Error wrapping passes the error back to your code
-// with additional context about where/what went wrong.
-// This is achieved with the %w verb in Errorf.
 func fileChecker(name string) error {
 	f, err := os.Open(name)
 	if err != nil {
@@ -18,14 +15,12 @@ func fileChecker(name string) error {
 	return nil
 }
 
-// Example with unwrap.
-// If you wanted custom, implement an unwrap method.
+// Use `errors.Is` to check if any error in the error chain matches a sentinel error.
 func main() {
 	err := fileChecker("whoops")
 	if err != nil {
-		fmt.Println(err)
-		if wrappedErr := errors.Unwrap(err); wrappedErr != nil {
-			fmt.Println(wrappedErr)
+		if errors.Is(err, os.ErrNotExist) {
+			fmt.Println("File does not exist")
 		}
 	}
 }
