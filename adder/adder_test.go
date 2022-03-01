@@ -1,35 +1,31 @@
 package adder
 
 import (
-	"fmt"
 	"os"
 	"testing"
-	"time"
 )
 
-var testTime time.Time
-
-// TestMain is run once per package to provide common test setup.
-// It (basically) always has the structure indicated below.
-// It's most useful for either setting up data in an external repository
-// ie a database,
-// or for package-level variable initialisation (as here).
-// But you should really try to avoid the latter anyways!
-func TestMain(m *testing.M) {
-	fmt.Println("Test setup")
-	testTime = time.Now()
-
-	fmt.Println("Run tests")
-	exit := m.Run()
-
-	fmt.Println("Test cleanup")
-	os.Exit(exit)
+// Cleanup is, in most ways a test specific defer.
+// It runs when the calling test completes.
+// If there are multiple, they run in a
+// "last added, first called" order.
+// They are most useful when a helper function creates temporary resources.
+func createFile(t *testing.T) (string, error) {
+	f, err := os.Create("tempfile")
+	if err != nil {
+		return "", err
+	}
+	// Do something to f...
+	t.Cleanup(func() {
+		os.Remove(f.Name())
+	})
+	return f.Name(), nil
 }
 
 func Test_addNumbers(t *testing.T) {
+	// createFile would then be used here.
 	result := addNumbers(2, 3)
 	if result != 5 {
 		t.Error("incorrect result: expected 5, got", result)
 	}
-	fmt.Println(testTime)
 }
